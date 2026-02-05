@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel de Administración</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-dark mb-4">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="/">⬅ Volver al Catálogo</a>
+        <span class="navbar-text text-white">⚙️ Configuración</span>
+    </div>
+</nav>
+
+<div class="container">
+    {% if mensaje %}
+        <div class="alert alert-success">{{ mensaje }}</div>
+    {% endif %}
+
+    <div class="card shadow-sm mx-auto" style="max-width: 600px;">
+        <div class="card-header bg-primary text-white fw-bold">Precios y Proveedores</div>
+        <div class="card-body">
+            <form method="POST">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Margen de Ganancia (%)</label>
+                    <input type="number" step="0.1" name="margen" class="form-control" value="{{ config.margen }}">
+                    <div class="form-text">Porcentaje que se suma al costo original.</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Costo de Envío Fijo ($)</label>
+                    <input type="number" step="100" name="envio" class="form-control" value="{{ config.envio }}">
+                    <div class="form-text">Monto fijo en pesos que se suma al final.</div>
+                </div>
+                
+                <hr>
+                <h6 class="fw-bold text-muted mb-3">Renombrar Proveedores (Alias)</h6>
+                {% for prov in proveedores %}
+                <div class="input-group mb-2">
+                    <span class="input-group-text bg-light">{{ prov }}</span>
+                    <input type="text" name="alias_{{ prov }}" class="form-control" 
+                           placeholder="Nuevo nombre..." 
+                           value="{{ config.alias.get(prov, '') }}">
+                </div>
+                {% endfor %}
+
+                <button type="submit" class="btn btn-primary w-100 mt-4">💾 Guardar Configuración</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
