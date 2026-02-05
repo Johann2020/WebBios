@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oportunidades de Arbitraje</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .vs-badge {
+            background-color: #ffc107; color: #000; font-weight: bold;
+            border-radius: 50%; width: 40px; height: 40px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto; border: 3px solid #fff;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .card-oportunidad {
+            border: none; background: #fff; margin-bottom: 20px;
+            border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+        .card-oportunidad:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+        .ganador { border: 2px solid #198754; background-color: #f8fffb; }
+        .perdedor { border: 1px solid #dee2e6; background-color: #f8f9fa; opacity: 0.8; }
+        .ahorro-tag { font-size: 1.2rem; font-weight: bold; color: #198754; }
+        .img-mini { height: 80px; width: 80px; object-fit: contain; background: #fff; border-radius: 8px; padding: 5px; border: 1px solid #eee; }
+    </style>
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-dark mb-4">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="/">⬅ Volver al Catálogo</a>
+        <span class="navbar-text text-white">
+            🚀 {{ oportunidades|length }} Oportunidades Detectadas
+        </span>
+    </div>
+</nav>
+
+<div class="container">
+    {% if oportunidades|length == 0 %}
+        <div class="alert alert-info text-center py-5">
+            <h4>Todo parece estar en orden 🤷‍♂️</h4>
+            <p>No hay diferencias de precio mayores a $5.000 entre productos idénticos.</p>
+        </div>
+    {% endif %}
+
+    {% for op in oportunidades %}
+    <div class="card-oportunidad p-3">
+        <div class="row align-items-center">
+            <div class="col-md-5">
+                <div class="p-3 rounded ganador position-relative">
+                    <span class="badge bg-success position-absolute top-0 start-0 m-2">COMPRAR AQUÍ</span>
+                    <div class="d-flex align-items-center gap-3">
+                        <img src="{{ op.producto_barato.Imagen_URL }}" class="img-mini" onerror="this.src='https://via.placeholder.com/80'">
+                        <div class="text-start">
+                            <h6 class="mb-1 text-success fw-bold">{{ op.producto_barato.Pagina }}</h6>
+                            <div class="small text-muted mb-1">{{ op.producto_barato.Producto }}</div>
+                            <h4 class="text-dark fw-bold m-0">{{ op.producto_barato.Precio_Venta }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-2 text-center py-3 py-md-0">
+                <div class="vs-badge">VS</div>
+                <div class="mt-3">
+                    <small class="text-muted d-block">Ganancia</small>
+                    <span class="ahorro-tag">${{ "{:,.0f}".format(op.diferencia).replace(",", ".") }}</span>
+                </div>
+                <div class="mt-2"><span class="badge bg-secondary">Certeza: {{ op.certeza }}%</span></div>
+            </div>
+
+            <div class="col-md-5">
+                <div class="p-3 rounded perdedor">
+                    <div class="d-flex align-items-center gap-3">
+                        <img src="{{ op.producto_caro.Imagen_URL }}" class="img-mini" onerror="this.src='https://via.placeholder.com/80'">
+                        <div class="text-start">
+                            <h6 class="mb-1 text-secondary fw-bold">{{ op.producto_caro.Pagina }}</h6>
+                            <div class="small text-muted mb-1">{{ op.producto_caro.Producto }}</div>
+                            <h5 class="text-muted text-decoration-line-through m-0">{{ op.producto_caro.Precio_Venta }}</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+</body>
+</html>
